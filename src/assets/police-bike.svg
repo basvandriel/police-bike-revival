@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <defs>
+    <linearGradient id="helmetGrad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#26335d" />
+      <stop offset="100%" stop-color="#0d173f" />
+    </linearGradient>
+    <linearGradient id="jacketGrad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0a2857" />
+      <stop offset="100%" stop-color="#1c4a8f" />
+    </linearGradient>
+    <radialGradient id="wheelGrad" cx="0.5" cy="0.5" r="0.55">
+      <stop offset="40%" stop-color="#2f3b5f" />
+      <stop offset="100%" stop-color="#111620" />
+    </radialGradient>
+    <linearGradient id="bodyGrad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f3c76" />
+      <stop offset="100%" stop-color="#1975d0" />
+    </linearGradient>
+  </defs>
+
+  <!-- rear wheel -->
+  <circle cx="120" cy="180" r="34" fill="url(#wheelGrad)" />
+  <circle cx="120" cy="180" r="14" fill="#8f9ef5" />
+  <circle cx="120" cy="180" r="5" fill="#1d243a" />
+
+  <!-- wheel spokes -->
+  <g stroke="#5a6da4" stroke-width="2" stroke-linecap="round">
+    <line x1="120" y1="144" x2="120" y2="216" />
+    <line x1="86" y1="180" x2="154" y2="180" />
+    <line x1="94" y1="150" x2="146" y2="210" />
+    <line x1="94" y1="210" x2="146" y2="150" />
+  </g>
+
+  <!-- swingarm and exhaust -->
+  <path d="M120 180 L156 132" stroke="#2b3a58" stroke-width="8" stroke-linecap="round" />
+  <path d="M84 180 L108 136" stroke="#2b3a58" stroke-width="8" stroke-linecap="round" />
+  <path d="M150 122 C154 118 160 116 168 118 C174 120 180 126 180 132 C180 134 178 138 174 140 L152 136"
+        fill="#1b2644" />
+  <path d="M150 122 C152 132 154 144 150 150" stroke="#0d0f1a" stroke-width="6" stroke-linecap="round" />
+
+  <!-- pannier box -->
+  <path d="M72 108 L168 108 L168 138 C168 146 162 152 154 154 L86 154 C78 152 72 146 72 138 Z"
+        fill="url(#bodyGrad)" stroke="#0d3c91" stroke-width="4" />
+  <path d="M88 112 H152" stroke="#80bfff" stroke-width="3" stroke-linecap="round" />
+  <text x="108" y="132" font-family="Arial, sans-serif" font-size="12" fill="#ffffff" font-weight="700">POLICE</text>
+
+  <!-- seat -->
+  <path d="M90 108 C96 86 106 78 120 78 C134 78 144 86 150 108" fill="#0e244e" stroke="#0d3c91" stroke-width="4" />
+  <path d="M94 106 H146" stroke="#6489d6" stroke-width="3" stroke-linecap="round" />
+
+  <!-- rider legs -->
+  <path d="M92 126 C88 150 92 165 100 168 H140 C148 165 152 150 148 126 C152 136 152 150 148 162 C144 174 136 178 128 178 H112 C104 178 96 174 92 162 C88 150 88 136 92 126 Z"
+        fill="#0d3c91" stroke="#0a1636" stroke-width="4" />
+  <path d="M100 132 L106 156" stroke="#4f5d8f" stroke-width="4" />
+  <path d="M140 132 L134 156" stroke="#4f5d8f" stroke-width="4" />
+
+  <!-- torso/back -->
+  <path d="M98 76 C94 100 98 118 108 136 C110 144 114 156 120 156 C126 156 130 144 132 136 C142 118 146 100 142 76 C142 56 120 46 120 46 C120 46 98 56 98 76 Z"
+        fill="url(#jacketGrad)" stroke="#0d3c91" stroke-width="4" />
+  <path d="M108 94 C106 108 106 118 110 132" stroke="#b8d7ff" stroke-width="4" stroke-linecap="round" />
+
+  <!-- police shoulder stripes -->
+  <path d="M108 94 L100 108" stroke="#ffffff" stroke-width="4" />
+  <path d="M132 94 L140 108" stroke="#ffffff" stroke-width="4" />
+  <path d="M108 106 L118 110" stroke="#b8d7ff" stroke-width="3" />
+  <path d="M132 106 L122 110" stroke="#b8d7ff" stroke-width="3" />
+
+  <!-- reflective stripe on back -->
+  <path d="M104 118 L136 118" stroke="#88b2ff" stroke-width="8" stroke-linecap="round" opacity="0.8" />
+
+  <!-- badge/back patch -->
+  <path d="M114 96 L120 112 L126 96 Z" fill="#ffd700" />
+  <path d="M112 90 C112 84 128 84 128 90 V96 C128 102 112 102 112 96 Z" fill="#ffffff" />
+  <path d="M116 90 L124 90" stroke="#0d3c91" stroke-width="2" />
+
+  <!-- helmet back -->
+  <path d="M100 40 C100 20 120 10 120 10 C120 10 140 20 140 40 C140 54 100 54 100 40 Z"
+        fill="url(#helmetGrad)" stroke="#0d3c91" stroke-width="4" />
+  <path d="M102 40 C110 28 130 28 138 40" stroke="#89bbff" stroke-width="4" fill="none" stroke-linecap="round" />
+  <path d="M108 44 C108 52 118 56 132 44" fill="#0c1d3e" opacity="0.75" />
+
+  <!-- neck protector -->
+  <path d="M106 54 C106 62 110 68 120 68 C130 68 134 62 134 54" fill="#0d2f56" />
+
+  <!-- handlebars rear view -->
+  <path d="M72 118 C96 98 144 98 168 118" stroke="#0d3c91" stroke-width="12" stroke-linecap="round" />
+  <circle cx="70" cy="116" r="9" fill="#0d3c91" />
+  <circle cx="170" cy="116" r="9" fill="#0d3c91" />
+  <path d="M72 116 L66 112" stroke="#5376b5" stroke-width="4" />
+  <path d="M170 116 L176 112" stroke="#5376b5" stroke-width="4" />
+
+  <!-- rear lights assembly -->
+  <path d="M90 142 C92 130 108 124 120 124 C132 124 148 130 150 142" fill="#221d36" />
+  <circle cx="92" cy="146" r="7" fill="#ff1744" />
+  <circle cx="148" cy="146" r="7" fill="#ff1744" />
+  <path d="M108 148 H132" stroke="#ff8a80" stroke-width="4" stroke-linecap="round" />
+
+  <!-- license plate area -->
+  <rect x="108" y="160" width="24" height="12" rx="4" fill="#f9f9f9" />
+  <path d="M110 168 H118" stroke="#0d3c91" stroke-width="2" />
+  <path d="M122 168 H130" stroke="#0d3c91" stroke-width="2" />
+</svg>

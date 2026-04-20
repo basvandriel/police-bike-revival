@@ -1,0 +1,19 @@
+:root {
+  margin: 0;
+  padding: 0;
+}
+#overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+#score,
+#health {
+  color: white;
+  font-size: 18px;
+  position: relative;
+  display: block;
+  font-weight: bold;
+}
