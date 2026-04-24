@@ -13,7 +13,12 @@ import { ObstacleView } from "./obstacle-view";
 import { CollisionSystem } from "./collision-system";
 import { Scene } from "./scene";
 import { ThreeSetup } from "./three-setup";
-import { BIKE_WIDTH, BIKE_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT } from "./constants";
+import {
+  BIKE_WIDTH,
+  BIKE_HEIGHT,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+} from "./constants";
 import bikeUrl from "./assets/police-bike.svg";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game");
@@ -44,7 +49,11 @@ const bikeEntity = new BikeEntity(bikeModel, bikeView, mouseStrategy);
 const hud = new Hud(scoreElement, healthElement);
 const collisionSystem = new CollisionSystem(bikeModel, roadWorld);
 const scene = new Scene(
-  [backgroundEntity, { update: () => {}, draw: () => obstacleView.draw() }, bikeEntity],
+  [
+    backgroundEntity,
+    { update: () => {}, draw: () => obstacleView.draw() },
+    bikeEntity,
+  ],
   [mouseStrategy],
   [collisionSystem],
 );
@@ -55,8 +64,4 @@ collisionSystem.on("hit", ({ obstacleId }) => {
   game.onObstacleHit(obstacleId);
 });
 
-void Promise.all([
-  game.init(),
-  obstacleView.load(),
-]).then(() => game.start());
-
+void Promise.all([game.init(), obstacleView.load()]).then(() => game.start());

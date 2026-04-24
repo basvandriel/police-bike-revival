@@ -29,9 +29,33 @@ export interface ActiveObstacle extends ObstacleDef {
 export class RoadWorld {
   private readonly backgroundModel: BackgroundModel;
   readonly defs: ObstacleDef[] = [
-    { id: "warning", worldZPhase: 0.0,  xFrac: -0.5,  widthFrac: 0.1,  aspect: 1.8, color: "#f97316", label: "!" },
-    { id: "person1", worldZPhase: 0.34, xFrac:  0.4,  widthFrac: 0.12, aspect: 2.0, color: "#dc2626", label: "P" },
-    { id: "person2", worldZPhase: 0.67, xFrac: -0.25, widthFrac: 0.1,  aspect: 1.9, color: "#22c55e", label: "?" },
+    {
+      id: "warning",
+      worldZPhase: 0.0,
+      xFrac: -0.5,
+      widthFrac: 0.1,
+      aspect: 1.8,
+      color: "#f97316",
+      label: "!",
+    },
+    {
+      id: "person1",
+      worldZPhase: 0.34,
+      xFrac: 0.4,
+      widthFrac: 0.12,
+      aspect: 2.0,
+      color: "#dc2626",
+      label: "P",
+    },
+    {
+      id: "person2",
+      worldZPhase: 0.67,
+      xFrac: -0.25,
+      widthFrac: 0.1,
+      aspect: 1.9,
+      color: "#22c55e",
+      label: "?",
+    },
   ];
 
   constructor(backgroundModel: BackgroundModel) {

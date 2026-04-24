@@ -24,9 +24,7 @@ export class EventEmitter<T extends EventMap> {
   off<K extends keyof T>(event: K, fn: Listener<T[K]>): void {
     const arr = this.listeners[event];
     if (arr) {
-      this.listeners[event] = arr.filter(
-        (l) => l !== fn,
-      ) as Listener<T[K]>[];
+      this.listeners[event] = arr.filter((l) => l !== fn) as Listener<T[K]>[];
     }
   }
 

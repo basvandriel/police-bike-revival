@@ -4,8 +4,9 @@ import type { BackgroundModel } from "./background-model";
 import type { ThreeSetup } from "./three-setup";
 
 // World-space road dimensions — shared with ObstacleView and BikeView
-export const ROAD_WIDTH = 8;
+export const ROAD_WIDTH = 4.2;
 export const ROAD_LENGTH = 300;
+export const ROAD_NEAR_OFFSET = 0;
 
 /** Builds a 256×512 canvas texture with road markings baked in. */
 function buildRoadTexture(): THREE.CanvasTexture {

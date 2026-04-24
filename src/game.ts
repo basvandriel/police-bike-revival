@@ -47,8 +47,12 @@ export class Game {
     this.threeSetup.render();
   }
 
-  onObstacleHit(_obstacleId: string): void {
+  private reduceHealth() {
     this.state.health = Math.max(0, this.state.health - 10);
+  }
+
+  onObstacleHit(_obstacleId: string): void {
+    this.reduceHealth();
     this.hud.render(this.state);
   }
 

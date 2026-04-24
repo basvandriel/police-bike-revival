@@ -23,15 +23,18 @@ export class ThreeSetup {
     // current game's top sky colour well enough.
     this.scene.background = new THREE.Color(0x07101f);
 
-    // Camera sits behind and above the bike, looking down the road.
+    // Camera sits at the near edge of the road (z=0), 2 units above the surface.
+    // lookAt(0,0,-5.4): direction=(0,-2,-5.4), pitch=atan(2/5.4)=20.3°
+    // → horizon lands at ~18% from top, matching HORIZON_FRAC=0.18.
+    // Keeping z=0 means every downward ray hits the road — no gray gap at the bottom.
     this.camera = new THREE.PerspectiveCamera(
       60,
       CANVAS_WIDTH / CANVAS_HEIGHT,
       0.1,
       500,
     );
-    this.camera.position.set(0, 3, 5);
-    this.camera.lookAt(0, 1, -100);
+    this.camera.position.set(0, 2, 0);
+    this.camera.lookAt(0, 0, -5.4);
 
     // Ambient fill so nothing is pitch black
     this.scene.add(new THREE.AmbientLight(0xffffff, 0.5));

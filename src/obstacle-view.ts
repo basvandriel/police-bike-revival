@@ -2,7 +2,7 @@ import * as THREE from "three";
 import type { Drawable, Loadable } from "./engine";
 import type { RoadWorld, ObstacleDef } from "./road-world";
 import type { ThreeSetup } from "./three-setup";
-import { ROAD_WIDTH } from "./background-view";
+import { ROAD_WIDTH, ROAD_NEAR_OFFSET } from "./background-view";
 
 // worldZ 1..20 → Three.js z: -WORLD_Z_SCALE..-20*WORLD_Z_SCALE
 const WORLD_Z_SCALE = 3;
@@ -57,9 +57,9 @@ export class ObstacleView implements Loadable, Drawable {
       const h = w * aspect;
 
       mesh.position.set(
-        xFrac * (ROAD_WIDTH / 2),     // lane position
-        h / 2,                         // sit on road surface
-        -worldZ * WORLD_Z_SCALE,       // depth
+        xFrac * (ROAD_WIDTH / 2), // lane position
+        h / 2, // sit on road surface
+        -worldZ * WORLD_Z_SCALE - ROAD_NEAR_OFFSET, // depth offset onto the road
       );
 
       // Fade opacity below worldZ 0.9 — matches old 2D behaviour

@@ -5,12 +5,11 @@ import type { ThreeSetup } from "./three-setup";
 import { BIKE_WIDTH, CANVAS_WIDTH } from "./constants";
 import { ROAD_WIDTH } from "./background-view";
 
-// Bike plane size in world units
-const BIKE_WORLD_WIDTH = 2.2;
-const BIKE_WORLD_HEIGHT = 2.2;
-
-// Z position just in front of the camera (camera is at z=5, road starts at z=0)
-const BIKE_Z = 2;
+// Bike plane: 1×1 world unit (200×200px original → 33% of 600px screen height).
+// Place the bike a bit further along the road, not right at the near edge.
+const BIKE_WORLD_WIDTH = 1.0;
+const BIKE_WORLD_HEIGHT = 1.0;
+const BIKE_Z = -2.5;
 
 export class BikeView implements Loadable, Drawable {
   private readonly imageUrl: string;
@@ -55,6 +54,10 @@ export class BikeView implements Loadable, Drawable {
     const worldX = (bikeCenter / CANVAS_WIDTH - 0.5) * ROAD_WIDTH;
 
     this.mesh.position.x = worldX;
-    this.mesh.rotation.z = -tilt; // tilt is clockwise in 2D, negate for Three.js
+
+    // Billboard: always face the camera so the sprite isn't sheared by the
+    // downward camera pitch. Apply lean afterwards in screen-space (local Z).
+    this.mesh.quaternion.copy(this.threeSetup.camera.quaternion);
+    this.mesh.rotateZ(-tilt);
   }
 }

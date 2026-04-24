@@ -15,5 +15,5 @@ export const HORIZON_FRAC = 0.18;
 
 // Obstacle world-Z — shared by RoadWorld, BackgroundView and CollisionSystem
 export const OBSTACLE_MAX_Z = 20;
-export const OBSTACLE_MIN_Z = 0.5;  // low enough that obstacles exit below the canvas naturally
+export const OBSTACLE_MIN_Z = 0.5; // low enough that obstacles exit below the canvas naturally
 export const OBSTACLE_SCROLL_FACTOR = 0.016;
