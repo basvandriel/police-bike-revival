@@ -1,58 +1,60 @@
-import { BIKE_HEIGHT, BIKE_WIDTH } from "./constants";
+import * as THREE from "three";
+import type { Loadable, Drawable } from "./engine";
 import type { BikeModel } from "./bike-model";
+import type { ThreeSetup } from "./three-setup";
+import { BIKE_WIDTH, CANVAS_WIDTH } from "./constants";
+import { ROAD_WIDTH } from "./background-view";
 
-export class BikeView {
-  private readonly image = new Image();
-  private loaded = false;
+// Bike plane size in world units
+const BIKE_WORLD_WIDTH = 2.2;
+const BIKE_WORLD_HEIGHT = 2.2;
+
+// Z position just in front of the camera (camera is at z=5, road starts at z=0)
+const BIKE_Z = 2;
+
+export class BikeView implements Loadable, Drawable {
+  private readonly imageUrl: string;
   private readonly model: BikeModel;
+  private readonly threeSetup: ThreeSetup;
+  private mesh!: THREE.Mesh;
 
-  constructor(imageUrl: string, model: BikeModel) {
-    this.image.src = imageUrl;
+  constructor(imageUrl: string, model: BikeModel, threeSetup: ThreeSetup) {
+    this.imageUrl = imageUrl;
     this.model = model;
-  }
-
-  get width(): number {
-    return BIKE_WIDTH;
-  }
-
-  get height(): number {
-    return BIKE_HEIGHT;
+    this.threeSetup = threeSetup;
   }
 
   load(): Promise<void> {
     return new Promise((resolve) => {
-      if (this.image.complete) {
-        this.loaded = true;
-        resolve();
-        return;
-      }
+      new THREE.TextureLoader().load(this.imageUrl, (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
 
-      this.image.onload = () => {
-        this.loaded = true;
+        this.mesh = new THREE.Mesh(
+          new THREE.PlaneGeometry(BIKE_WORLD_WIDTH, BIKE_WORLD_HEIGHT),
+          new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true,
+            depthWrite: false,
+          }),
+        );
+
+        this.mesh.position.set(0, BIKE_WORLD_HEIGHT / 2, BIKE_Z);
+        this.threeSetup.scene.add(this.mesh);
         resolve();
-      };
+      });
     });
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
-    if (!this.loaded) {
-      return;
-    }
+  draw(): void {
+    if (!this.mesh) return;
 
-    const { x, y, tilt } = this.model.state;
-    const centerX = x + BIKE_WIDTH / 2;
-    const centerY = y + BIKE_HEIGHT / 2;
+    const { x, tilt } = this.model.state;
 
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.rotate(tilt);
-    ctx.drawImage(
-      this.image,
-      -BIKE_WIDTH / 2,
-      -BIKE_HEIGHT / 2,
-      BIKE_WIDTH,
-      BIKE_HEIGHT,
-    );
-    ctx.restore();
+    // Map pixel x (0..CANVAS_WIDTH) to world x (-ROAD_WIDTH/2..ROAD_WIDTH/2)
+    const bikeCenter = x + BIKE_WIDTH / 2;
+    const worldX = (bikeCenter / CANVAS_WIDTH - 0.5) * ROAD_WIDTH;
+
+    this.mesh.position.x = worldX;
+    this.mesh.rotation.z = -tilt; // tilt is clockwise in 2D, negate for Three.js
   }
 }

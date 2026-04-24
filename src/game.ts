@@ -2,12 +2,12 @@ import type { GameState } from "./state";
 import type { InputHandler } from "./engine";
 import type { Hud } from "./hud";
 import type { Scene } from "./scene";
+import type { ThreeSetup } from "./three-setup";
 
 export class Game {
-  private readonly canvas: HTMLCanvasElement;
-  private readonly ctx: CanvasRenderingContext2D;
   private readonly hud: Hud;
   private readonly scene: Scene;
+  private readonly threeSetup: ThreeSetup;
   private readonly inputs: InputHandler[];
   private readonly state: GameState = {
     score: 50,
@@ -16,18 +16,15 @@ export class Game {
   private lastTime = 0;
 
   constructor(
-    canvas: HTMLCanvasElement,
     hud: Hud,
     scene: Scene,
+    threeSetup: ThreeSetup,
     inputs: InputHandler[],
   ) {
-    this.canvas = canvas;
     this.hud = hud;
     this.scene = scene;
+    this.threeSetup = threeSetup;
     this.inputs = inputs;
-    this.ctx = this.canvas.getContext("2d")!;
-    this.canvas.width = 800;
-    this.canvas.height = 600;
   }
 
   async init(): Promise<void> {
@@ -46,9 +43,13 @@ export class Game {
   }
 
   private draw(): void {
-    this.ctx.fillStyle = "#1f2937";
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.scene.draw(this.ctx);
+    this.scene.draw();
+    this.threeSetup.render();
+  }
+
+  onObstacleHit(_obstacleId: string): void {
+    this.state.health = Math.max(0, this.state.health - 10);
+    this.hud.render(this.state);
   }
 
   private loop(currentTime: number): void {

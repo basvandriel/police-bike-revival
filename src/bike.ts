@@ -7,6 +7,7 @@ const TILT_RECOVER_DELAY = 250;
 
 export class Bike {
   public state: BikeState;
+
   private readonly image: HTMLImageElement;
   private loaded = false;
 
