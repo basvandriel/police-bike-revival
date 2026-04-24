@@ -4,9 +4,21 @@ import { Hud } from "./hud";
 import { BikeModel } from "./bike-model";
 import { BikeView } from "./bike-view";
 import { BikeEntity } from "./bike-entity";
-import { BikeMouseController } from "./input";
+import { MouseMovementStrategy } from "./movement-strategy";
+import { BackgroundModel } from "./background-model";
+import { BackgroundView } from "./background-view";
+import { BackgroundEntity } from "./background-entity";
+import { RoadWorld } from "./road-world";
+import { ObstacleView } from "./obstacle-view";
+import { CollisionSystem } from "./collision-system";
 import { Scene } from "./scene";
-import { BIKE_WIDTH, BIKE_HEIGHT } from "./constants";
+import { ThreeSetup } from "./three-setup";
+import {
+  BIKE_WIDTH,
+  BIKE_HEIGHT,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+} from "./constants";
 import bikeUrl from "./assets/police-bike.svg";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game");
@@ -17,16 +29,39 @@ if (!canvas) throw ReferenceError("Canvas element not found");
 if (!scoreElement) throw ReferenceError("Score element not found");
 if (!healthElement) throw ReferenceError("Health element not found");
 
+const threeSetup = new ThreeSetup(canvas);
+
+const backgroundModel = new BackgroundModel(200);
+const roadWorld = new RoadWorld(backgroundModel);
+
+const backgroundView = new BackgroundView(backgroundModel, threeSetup);
+const backgroundEntity = new BackgroundEntity(backgroundModel, backgroundView);
+
+const obstacleView = new ObstacleView(roadWorld, threeSetup);
+
 const bikeModel = new BikeModel(
-  (canvas.width - BIKE_WIDTH) / 2,
-  canvas.height - BIKE_HEIGHT - 16,
+  (CANVAS_WIDTH - BIKE_WIDTH) / 2,
+  CANVAS_HEIGHT - BIKE_HEIGHT - 16,
 );
-const bikeView = new BikeView(bikeUrl, bikeModel);
-const bikeEntity = new BikeEntity(bikeModel, bikeView);
+const bikeView = new BikeView(bikeUrl, bikeModel, threeSetup);
+const mouseStrategy = new MouseMovementStrategy(canvas);
+const bikeEntity = new BikeEntity(bikeModel, bikeView, mouseStrategy);
 const hud = new Hud(scoreElement, healthElement);
-const input = new BikeMouseController(canvas, bikeModel);
-const scene = new Scene([bikeEntity], [input]);
+const collisionSystem = new CollisionSystem(bikeModel, roadWorld);
+const scene = new Scene(
+  [
+    backgroundEntity,
+    { update: () => {}, draw: () => obstacleView.draw() },
+    bikeEntity,
+  ],
+  [mouseStrategy],
+  [collisionSystem],
+);
 
-const game = new Game(canvas, hud, scene, [input]);
+const game = new Game(hud, scene, threeSetup, [mouseStrategy]);
 
-void game.init().then(() => game.start());
+collisionSystem.on("hit", ({ obstacleId }) => {
+  game.onObstacleHit(obstacleId);
+});
+
+void Promise.all([game.init(), obstacleView.load()]).then(() => game.start());

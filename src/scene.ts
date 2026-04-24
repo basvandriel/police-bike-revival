@@ -1,12 +1,18 @@
-import type { Entity, InputHandler, Loadable } from "./engine";
+import type { Entity, InputHandler, Loadable, Updatable } from "./engine";
 
 export class Scene {
   private readonly entities: Entity[];
   private readonly inputHandlers: InputHandler[];
+  private readonly systems: Updatable[];
 
-  constructor(entities: Entity[], inputHandlers: InputHandler[]) {
+  constructor(
+    entities: Entity[],
+    inputHandlers: InputHandler[],
+    systems: Updatable[] = [],
+  ) {
     this.entities = entities;
     this.inputHandlers = inputHandlers;
+    this.systems = systems;
   }
 
   async load(): Promise<void> {
@@ -28,9 +34,10 @@ export class Scene {
 
   update(deltaTime: number): void {
     this.entities.forEach((entity) => entity.update(deltaTime));
+    this.systems.forEach((system) => system.update(deltaTime));
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
-    this.entities.forEach((entity) => entity.draw(ctx));
+  draw(): void {
+    this.entities.forEach((entity) => entity.draw());
   }
 }

@@ -3,7 +3,7 @@ export interface Updatable {
 }
 
 export interface Drawable {
-  draw(ctx: CanvasRenderingContext2D): void;
+  draw(): void;
 }
 
 export interface InputHandler {
