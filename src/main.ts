@@ -62,6 +62,9 @@ const game = new Game(hud, scene, threeSetup, [mouseStrategy]);
 
 collisionSystem.on("hit", ({ obstacleId }) => {
   game.onObstacleHit(obstacleId);
+
+  // we need to remove the obstacle from the game, which is in roadworld
+  roadWorld.rmDef(obstacleId);
 });
 
 void Promise.all([game.init(), obstacleView.load()]).then(() => game.start());

@@ -53,6 +53,7 @@ export class Game {
 
   onObstacleHit(_obstacleId: string): void {
     this.reduceHealth();
+
     this.hud.render(this.state);
   }
 

@@ -62,6 +62,13 @@ export class RoadWorld {
     this.backgroundModel = backgroundModel;
   }
 
+  rmDef(id: string): void {
+    this.defs.splice(
+      this.defs.findIndex((def) => def.id === id),
+      1,
+    );
+  }
+
   /**
    * Returns obstacles currently visible in the world, sorted far → near
    * so renderers can draw them back-to-front.

@@ -2,24 +2,16 @@ import type { Updatable } from "./engine";
 import type { BikeModel } from "./bike-model";
 import type { RoadWorld } from "./road-world";
 import { EventEmitter } from "./event-emitter";
-import {
-  BIKE_WIDTH,
-  CANVAS_WIDTH,
-  OBSTACLE_MAX_Z,
-  ROAD_BOTTOM_WIDTH_FRAC,
-} from "./constants";
+import { BIKE_WIDTH, CANVAS_WIDTH, OBSTACLE_MAX_Z } from "./constants";
+import { ROAD_WIDTH } from "./background-view";
 
 export interface CollisionEvents {
   hit: { obstacleId: string };
 }
 
-// Precompute road geometry constants once — same values BackgroundView uses
-const CENTER_X = CANVAS_WIDTH / 2;
-const ROAD_BOTTOM_HALF = (CANVAS_WIDTH * ROAD_BOTTOM_WIDTH_FRAC) / 2;
-
-// An obstacle triggers a hit when it crosses this world-Z threshold.
-// At worldZ 1.5 → screenY ≈ 436 (108 + 492/1.5), which is inside the bike sprite.
-const HIT_Z_THRESHOLD = 1.5;
+// The bike sits at the front of the road and is roughly 1 world unit wide.
+const BIKE_WORLD_HALF = 0.45;
+const BIKE_COLLIDE_Z = 0.85;
 
 export class CollisionSystem
   extends EventEmitter<CollisionEvents>
@@ -38,8 +30,7 @@ export class CollisionSystem
 
   update(_deltaTime: number): void {
     const bikeCenter = this.bikeModel.state.x + BIKE_WIDTH / 2;
-    // Slightly smaller than the full sprite width — fairer for the player
-    const bikeHalf = BIKE_WIDTH * 0.35;
+    const bikeWorldX = (bikeCenter / CANVAS_WIDTH - 0.5) * ROAD_WIDTH;
 
     for (const obstacle of this.obstacleModel.activeObstacles) {
       const { id, worldZ, xFrac, widthFrac } = obstacle;
@@ -49,14 +40,14 @@ export class CollisionSystem
         this.hitCooldown.delete(id);
       }
 
-      if (worldZ <= HIT_Z_THRESHOLD && !this.hitCooldown.has(id)) {
-        // Project obstacle screen X using the same perspective formula as the renderer:
-        // screenX = centerX + xFrac * (roadBottomHalf / worldZ)
-        const screenX = CENTER_X + (xFrac * ROAD_BOTTOM_HALF) / worldZ;
-        const spriteHalf =
-          (widthFrac * CANVAS_WIDTH * ROAD_BOTTOM_WIDTH_FRAC) / worldZ / 2;
+      if (worldZ <= BIKE_COLLIDE_Z && !this.hitCooldown.has(id)) {
+        const obstacleWorldX = xFrac * (ROAD_WIDTH / 2);
+        const obstacleHalf = (widthFrac * ROAD_WIDTH) / 2;
 
-        if (Math.abs(bikeCenter - screenX) < bikeHalf + spriteHalf) {
+        if (
+          Math.abs(bikeWorldX - obstacleWorldX) <
+          BIKE_WORLD_HALF + obstacleHalf
+        ) {
           this.hitCooldown.add(id);
           this.emit("hit", { obstacleId: id });
         }
