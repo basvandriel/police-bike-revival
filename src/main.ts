@@ -48,6 +48,7 @@ const mouseStrategy = new MouseMovementStrategy(canvas);
 const bikeEntity = new BikeEntity(bikeModel, bikeView, mouseStrategy);
 const hud = new Hud(scoreElement, healthElement);
 const collisionSystem = new CollisionSystem(bikeModel, roadWorld);
+
 const scene = new Scene(
   [
     backgroundEntity,
