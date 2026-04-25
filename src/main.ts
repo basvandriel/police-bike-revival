@@ -66,6 +66,10 @@ collisionSystem.on("hit", ({ obstacleId }) => {
 
   // we need to remove the obstacle from the game, which is in roadworld
   roadWorld.rmDef(obstacleId);
+
+  roadWorld.spawnObstacle(
+    roadWorld.defs[Math.floor(Math.random() * roadWorld.defs.length)],
+  );
 });
 
 void Promise.all([game.init(), obstacleView.load()]).then(() => game.start());

@@ -62,6 +62,10 @@ export class RoadWorld {
     this.backgroundModel = backgroundModel;
   }
 
+  spawnObstacle(def: ObstacleDef): void {
+    this.defs.push(def);
+  }
+
   rmDef(id: string): void {
     this.defs.splice(
       this.defs.findIndex((def) => def.id === id),
