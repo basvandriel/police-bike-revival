@@ -64,13 +64,18 @@ export class RoadWorld {
 
   spawnObstacle(def: ObstacleDef): void {
     this.defs.push(def);
+
+    console.log(
+      `Spawned obstacle ${def.id} at phase ${def.worldZPhase.toFixed(2)}`,
+    );
   }
 
   rmDef(id: string): void {
-    this.defs.splice(
-      this.defs.findIndex((def) => def.id === id),
-      1,
-    );
+    const index = this.defs.findIndex((def) => def.id === id);
+
+    if (index >= 0) {
+      this.defs.splice(index, 1);
+    }
   }
 
   /**

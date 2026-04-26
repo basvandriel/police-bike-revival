@@ -9,8 +9,9 @@ export class Game {
   private readonly scene: Scene;
   private readonly threeSetup: ThreeSetup;
   private readonly inputs: InputHandler[];
+
   private readonly state: GameState = {
-    score: 50,
+    score: 0,
     health: 50,
   };
   private lastTime = 0;

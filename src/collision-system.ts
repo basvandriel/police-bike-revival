@@ -49,6 +49,8 @@ export class CollisionSystem
           BIKE_WORLD_HALF + obstacleHalf
         ) {
           this.hitCooldown.add(id);
+
+          console.debug("Hit!");
           this.emit("hit", { obstacleId: id });
         }
       }

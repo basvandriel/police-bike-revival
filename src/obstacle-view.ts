@@ -7,6 +7,31 @@ import { ROAD_WIDTH, ROAD_NEAR_OFFSET } from "./background-view";
 // worldZ 1..20 → Three.js z: -WORLD_Z_SCALE..-20*WORLD_Z_SCALE
 const WORLD_Z_SCALE = 3;
 
+function buildObstacleTexture(def: ObstacleDef): THREE.CanvasTexture {
+  const SIZE = 256;
+  const canvas = document.createElement("canvas");
+  canvas.width = SIZE;
+  canvas.height = SIZE;
+  const ctx = canvas.getContext("2d")!;
+
+  ctx.fillStyle = def.color;
+  ctx.fillRect(0, 0, SIZE, SIZE);
+
+  if (def.label) {
+    ctx.font = "bold 160px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+    ctx.shadowBlur = 12;
+    ctx.fillText(def.label, SIZE / 2, SIZE / 2);
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
 interface ObstacleMesh {
   def: ObstacleDef;
   mesh: THREE.Mesh;
@@ -22,26 +47,38 @@ export class ObstacleView implements Loadable, Drawable {
     this.threeSetup = threeSetup;
   }
 
-  load(): Promise<void> {
+  private createMeshForDef(def: ObstacleDef): THREE.Mesh {
+    const w = def.widthFrac * ROAD_WIDTH;
+    const h = w * def.aspect;
+    const d = w * 0.6; // depth of the box
+
+    const material = new THREE.MeshLambertMaterial({
+      map: def.label ? buildObstacleTexture(def) : undefined,
+      color: new THREE.Color(def.color),
+    });
+
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material);
+    mesh.castShadow = true;
+    mesh.visible = false; // hidden until worldZ puts it in range
+    this.threeSetup.scene.add(mesh);
+    return mesh;
+  }
+
+  private ensureMeshes(): void {
     for (const def of this.roadWorld.defs) {
-      const w = def.widthFrac * ROAD_WIDTH;
-      const h = w * def.aspect;
-      const d = w * 0.6; // depth of the box
-
-      const mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(w, h, d),
-        new THREE.MeshLambertMaterial({ color: new THREE.Color(def.color) }),
-      );
-
-      mesh.castShadow = true;
-      mesh.visible = false; // hidden until worldZ puts it in range
-      this.threeSetup.scene.add(mesh);
-      this.meshes.push({ def, mesh });
+      if (!this.meshes.some((entry) => entry.def.id === def.id)) {
+        this.meshes.push({ def, mesh: this.createMeshForDef(def) });
+      }
     }
+  }
+
+  load(): Promise<void> {
+    this.ensureMeshes();
     return Promise.resolve();
   }
 
   draw(): void {
+    this.ensureMeshes();
     const active = this.roadWorld.activeObstacles;
 
     for (const { def, mesh } of this.meshes) {

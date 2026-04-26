@@ -61,15 +61,35 @@ const scene = new Scene(
 
 const game = new Game(hud, scene, threeSetup, [mouseStrategy]);
 
+function spawnRandomObstacle(): void {
+  const id = Math.random().toString(36).substring(2, 9);
+  const color = `#${Math.floor(Math.random() * 0xffffff)
+    .toString(16)
+    .padStart(6, "0")}`;
+  const xFracOptions = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75];
+  const xFrac = xFracOptions[Math.floor(Math.random() * xFracOptions.length)];
+  const widthFrac = 0.08 + Math.random() * 0.08;
+  const aspect = 1.6 + Math.random() * 0.6;
+  const worldZPhase = 0.15 + Math.random() * 0.7;
+  const label = `...${Math.floor(Math.random() * 100)}`;
+
+  roadWorld.spawnObstacle({
+    id,
+    worldZPhase,
+    xFrac,
+    widthFrac,
+    aspect,
+    color,
+    label,
+  });
+}
+
 collisionSystem.on("hit", ({ obstacleId }) => {
   game.onObstacleHit(obstacleId);
 
-  // we need to remove the obstacle from the game, which is in roadworld
+  // remove the obstacle from the world before spawning a new one
   roadWorld.rmDef(obstacleId);
-
-  roadWorld.spawnObstacle(
-    roadWorld.defs[Math.floor(Math.random() * roadWorld.defs.length)],
-  );
+  spawnRandomObstacle();
 });
 
 void Promise.all([game.init(), obstacleView.load()]).then(() => game.start());
